@@ -5,6 +5,19 @@ const dns = require('dns');
 const net = require('net');
 const express = require('express');
 const app = express();
+const whois = require('whois-json');
+
+app.get('/whois/:domain', (req, res) => {
+    const domain = req.params.domain;
+
+    whois(domain)
+        .then(function(result) {
+            res.send(result);
+        })
+        .catch(function(error) {
+            res.send({ error: error.toString() });
+        });
+});
 
 app.get('/ping/:host', (req, res) => {
   const host = req.params.host;
@@ -69,6 +82,10 @@ app.get('/', (req, res) => {
         <li>
           <p><strong>GET /checkport/:host/:port</strong></p>
           <p>Checks if a specific port is open on a host</p>
+        </li>
+        <li>
+          <p><strong>GET /whois/:domain</strong></p>
+          <p>Retrieve information about the registered owner of a domain name</p>
         </li>
       </ul>
     `;
