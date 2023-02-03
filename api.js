@@ -5,9 +5,20 @@ const dns = require('dns');
 const net = require('net');
 const express = require('express');
 const whois = require('whois-json');
-const geoip = require('geoip-lite')
-const app = express();
+const geoip = require('geoip-lite');
 const host = "localhost", port = "3000";
+const app = express();
+
+app.get('/verifyemail/:email', (req, res) => {
+  const email = req.params.email;
+  const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (emailRegex.test(email)) {
+    res.send({ email: email, valid: true });
+  } else {
+    res.send({ email: email, valid: false });
+  }
+});
 
 app.get('/geoipinfo/:ip', (req, res) => {
   const ip = req.params.ip;
@@ -101,6 +112,10 @@ app.get('/', (req, res) => {
           <p><strong>GET /geoipinfo/:ip</strong></p>
           <p>Retrieve country information for a given IP address</p>
         </li>
+        <li>
+        <p><strong>GET /verifyemail/:email</strong></p>
+        <p>Verify if an email address format is valid</p>
+      </li>
       </ul>
     `;
   

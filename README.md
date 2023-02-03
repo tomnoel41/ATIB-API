@@ -6,6 +6,7 @@
 - [x] Check Port Host
 - [x] Whois resolve domain
 - [x] Geo IP Information
+- [x] Check validity e-mail format
 
 ## Usage Exemple
 
@@ -16,6 +17,7 @@
 - GET /checkport/:host/:port [Checks if a specific port is open on a host]
 - GET /whois/:domain [Retrieve information about the registered owner of a domain name]
 - GET /geoipinfo/:ip [Retrieve country information for a given IP address]
+- GET /verifyemail/:email [Verify if an email address format is valid]
 
 
 ## Installation
