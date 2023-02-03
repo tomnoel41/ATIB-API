@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
     res.redirect('/help');
   });
 
-app.get('/help', (req, res) => {
+  app.get('/help', (req, res) => {
     const helpMessage = `
       <h1>Welcome to the ATIB-API Help page!</h1>
       <p>Available routes:</p>
@@ -64,12 +64,16 @@ app.get('/help', (req, res) => {
           <p><strong>GET /resolvedns/:host</strong></p>
           <p>Resolves the IP addresses associated with a domain name</p>
         </li>
+        <li>
+          <p><strong>GET /checkport/:host/:port</strong></p>
+          <p>Checks if a specific port is open on a host</p>
+        </li>
       </ul>
     `;
   
     res.send(helpMessage);
 });
   
-app.listen(80, () => {
-  console.log('API running on http://localhost/');
+app.listen(3000, () => {
+  console.log('API running on http://localhost:3000/');
 });

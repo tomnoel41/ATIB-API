@@ -7,7 +7,6 @@ var net = require('net')
   , events = require('events')
   , assert = require('assert')
   , util = require('util')
-  , Buffer = require('safe-buffer').Buffer
   ;
 
 exports.httpOverHttp = httpOverHttp
@@ -26,7 +25,6 @@ function httpsOverHttp(options) {
   var agent = new TunnelingAgent(options)
   agent.request = http.request
   agent.createSocket = createSecureSocket
-  agent.defaultPort = 443
   return agent
 }
 
@@ -40,7 +38,6 @@ function httpsOverHttps(options) {
   var agent = new TunnelingAgent(options)
   agent.request = https.request
   agent.createSocket = createSecureSocket
-  agent.defaultPort = 443
   return agent
 }
 
@@ -70,43 +67,28 @@ function TunnelingAgent(options) {
 }
 util.inherits(TunnelingAgent, events.EventEmitter)
 
-TunnelingAgent.prototype.addRequest = function addRequest(req, options) {
+TunnelingAgent.prototype.addRequest = function addRequest(req, host, port) {
   var self = this
-
-   // Legacy API: addRequest(req, host, port, path)
-  if (typeof options === 'string') {
-    options = {
-      host: options,
-      port: arguments[2],
-      path: arguments[3]
-    };
-  }
 
   if (self.sockets.length >= this.maxSockets) {
     // We are over limit so we'll add it to the queue.
-    self.requests.push({host: options.host, port: options.port, request: req})
+    self.requests.push({host: host, port: port, request: req})
     return
   }
 
   // If we are under maxSockets create a new one.
-  self.createConnection({host: options.host, port: options.port, request: req})
-}
-
-TunnelingAgent.prototype.createConnection = function createConnection(pending) {
-  var self = this
-
-  self.createSocket(pending, function(socket) {
+  self.createSocket({host: host, port: port, request: req}, function(socket) {
     socket.on('free', onFree)
     socket.on('close', onCloseOrRemove)
     socket.on('agentRemove', onCloseOrRemove)
-    pending.request.onSocket(socket)
+    req.onSocket(socket)
 
     function onFree() {
-      self.emit('free', socket, pending.host, pending.port)
+      self.emit('free', socket, host, port)
     }
 
     function onCloseOrRemove(err) {
-      self.removeSocket(socket)
+      self.removeSocket()
       socket.removeListener('free', onFree)
       socket.removeListener('close', onCloseOrRemove)
       socket.removeListener('agentRemove', onCloseOrRemove)
@@ -119,7 +101,7 @@ TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
   var placeholder = {}
   self.sockets.push(placeholder)
 
-  var connectOptions = mergeOptions({}, self.proxyOptions,
+  var connectOptions = mergeOptions({}, self.proxyOptions, 
     { method: 'CONNECT'
     , path: options.host + ':' + options.port
     , agent: false
@@ -128,7 +110,7 @@ TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
   if (connectOptions.proxyAuth) {
     connectOptions.headers = connectOptions.headers || {}
     connectOptions.headers['Proxy-Authorization'] = 'Basic ' +
-        Buffer.from(connectOptions.proxyAuth).toString('base64')
+        new Buffer(connectOptions.proxyAuth).toString('base64')
   }
 
   debug('making CONNECT request')
@@ -184,14 +166,16 @@ TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
 TunnelingAgent.prototype.removeSocket = function removeSocket(socket) {
   var pos = this.sockets.indexOf(socket)
   if (pos === -1) return
-
+  
   this.sockets.splice(pos, 1)
 
   var pending = this.requests.shift()
   if (pending) {
     // If we have pending requests and a socket gets closed a new one
     // needs to be created to take over in the pool for the one that closed.
-    this.createConnection(pending)
+    this.createSocket(pending, function(socket) {
+      pending.request.onSocket(socket)
+    })
   }
 }
 
@@ -199,12 +183,11 @@ function createSecureSocket(options, cb) {
   var self = this
   TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {
     // 0 is dummy port for v0.6
-    var secureSocket = tls.connect(0, mergeOptions({}, self.options,
+    var secureSocket = tls.connect(0, mergeOptions({}, self.options, 
       { servername: options.host
       , socket: socket
       }
     ))
-    self.sockets[self.sockets.indexOf(socket)] = secureSocket
     cb(secureSocket)
   })
 }
