@@ -5,8 +5,17 @@ const dns = require('dns');
 const net = require('net');
 const express = require('express');
 const whois = require('whois-json');
+const geoip = require('geoip-lite')
 const app = express();
 const host = "localhost", port = "3000";
+
+app.get('/geoipinfo/:ip', (req, res) => {
+  const ip = req.params.ip;
+  const geo = geoip.lookup(ip);
+  res.send({ 
+    country: geo.country
+  });
+});
 
 app.get('/whois/:domain', (req, res) => {
     const domain = req.params.domain;
@@ -87,6 +96,10 @@ app.get('/', (req, res) => {
         <li>
           <p><strong>GET /whois/:domain</strong></p>
           <p>Retrieve information about the registered owner of a domain name</p>
+        </li>
+        <li>
+          <p><strong>GET /geoipinfo/:ip</strong></p>
+          <p>Retrieve country information for a given IP address</p>
         </li>
       </ul>
     `;
