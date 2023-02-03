@@ -1,3 +1,5 @@
+// By Tom Noel with ChatGPT
+
 const ping = require('ping');
 const dns = require('dns');
 const net = require('net');
@@ -75,5 +77,5 @@ app.get('/', (req, res) => {
 });
   
 app.listen(3000, () => {
-  console.log('API running on http://localhost:3000/');
+  console.log('API running on http://<ip>:3000/');
 });
