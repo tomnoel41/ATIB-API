@@ -20,5 +20,7 @@
 
 ## Installation
 
-1. git clone https://github.com/tomnoel41/ATIB-API.git
-2. node api.js
+```bash
+git clone https://github.com/tomnoel41/ATIB-API.git
+node api.js
+```
