@@ -1,6 +1,6 @@
 {
   "name": "atib-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "API for opensource (ATIB-API)",
   "main": "api.js",
   "scripts": {
@@ -26,5 +26,6 @@
     "net": "^1.0.2",
     "ping": "^0.4.2",
     "whois-json": "^2.0.4"
-  }
+  },
+  "devDependencies": {}
 }
