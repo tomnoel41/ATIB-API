@@ -22,5 +22,6 @@
 
 ```bash
 git clone https://github.com/tomnoel41/ATIB-API.git
+cd ATIB-API
 node api.js
 ```
