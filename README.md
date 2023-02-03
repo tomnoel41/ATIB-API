@@ -7,6 +7,7 @@
 - [x] Whois resolve domain
 - [x] Geo IP Information
 - [x] Check validity e-mail format
+- [x] Generate strong random password
 
 ## Usage Exemple
 
@@ -18,6 +19,7 @@
 - GET /whois/:domain [Retrieve information about the registered owner of a domain name]
 - GET /geoipinfo/:ip [Retrieve country information for a given IP address]
 - GET /verifyemail/:email [Verify if an email address format is valid]
+- GET /genpassword [Generates a strong 16 character password]
 
 
 ## Installation

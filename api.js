@@ -28,6 +28,15 @@ app.get('/geoipinfo/:ip', (req, res) => {
   });
 });
 
+app.get('/genpassword', (req,res) => {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-";
+  let password = "";
+  for (let i = 0; i < 16; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  res.send({password : password});
+});
+
 app.get('/whois/:domain', (req, res) => {
     const domain = req.params.domain;
 
@@ -113,9 +122,13 @@ app.get('/', (req, res) => {
           <p>Retrieve country information for a given IP address</p>
         </li>
         <li>
-        <p><strong>GET /verifyemail/:email</strong></p>
-        <p>Verify if an email address format is valid</p>
-      </li>
+          <p><strong>GET /verifyemail/:email</strong></p>
+          <p>Verify if an email address format is valid</p>
+        </li>
+        <li>
+          <p><strong>GET /genpassword</strong></p>
+          <p>Generates a strong 16 character password</p>
+        </li>
       </ul>
     `;
   
