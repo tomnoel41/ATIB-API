@@ -1,5 +1,6 @@
 const ping = require('ping');
-const traceroute = require('traceroute');
+const dns = require('dns');
+const net = require('net');
 const express = require('express');
 const app = express();
 
@@ -15,18 +16,60 @@ app.get('/ping/:host', (req, res) => {
     });
 });
 
-app.get('/traceroute/:host', (req, res) => {
-  const host = req.params.host;
 
-  traceroute.trace(host, function (err, response) {
-    if (err) {
-      res.send({ error: err.toString() });
-    } else {
-      res.send({ host: host, trace: response });
-    }
-  });
+app.get('/resolvedns/:host', (req, res) => {
+    const host = req.params.host;
+  
+    dns.resolve4(host, (err, addresses) => {
+      if (err) {
+        res.send({ error: err.toString() });
+        return;
+      }
+  
+      res.send({ host: host, addresses: addresses });
+    });
 });
 
+app.get('/checkport/:host/:port', (req, res) => {
+    const host = req.params.host;
+    const port = req.params.port;
+  
+    const server = net.createServer().listen(port, host);
+  
+    server.on('error', (err) => {
+      res.send({ host: host, port: port, status: 'closed' });
+      server.close();
+    });
+  
+    server.on('listening', () => {
+      res.send({ host: host, port: port, status: 'open' });
+      server.close();
+    });
+  });
+
+app.get('/', (req, res) => {
+    res.redirect('/help');
+  });
+
+app.get('/help', (req, res) => {
+    const helpMessage = `
+      <h1>Welcome to the ATIB-API Help page!</h1>
+      <p>Available routes:</p>
+      <ul>
+        <li>
+          <p><strong>GET /ping/:host</strong></p>
+          <p>Ping a host and returns the round trip time</p>
+        </li>
+        <li>
+          <p><strong>GET /resolvedns/:host</strong></p>
+          <p>Resolves the IP addresses associated with a domain name</p>
+        </li>
+      </ul>
+    `;
+  
+    res.send(helpMessage);
+});
+  
 app.listen(80, () => {
-  console.log('API running on http://localhost');
+  console.log('API running on http://localhost/');
 });
