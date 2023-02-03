@@ -4,8 +4,9 @@ const ping = require('ping');
 const dns = require('dns');
 const net = require('net');
 const express = require('express');
-const app = express();
 const whois = require('whois-json');
+const app = express();
+const host = "localhost", port = "3000";
 
 app.get('/whois/:domain', (req, res) => {
     const domain = req.params.domain;
@@ -93,6 +94,6 @@ app.get('/', (req, res) => {
     res.send(helpMessage);
 });
   
-app.listen(3000, () => {
-  console.log('API running on http://<ip>:3000/');
+app.listen(port, () => {
+  console.log(`API running on http://${host}:${port}/`);
 });
