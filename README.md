@@ -8,6 +8,7 @@
 - [x] Geo IP Information
 - [x] Check validity e-mail format
 - [x] Generate strong random password
+- [x] Computer unit conversion
 
 ## Usage Exemple
 
@@ -20,6 +21,7 @@
 - GET /geoipinfo/:ip [Retrieve country information for a given IP address]
 - GET /verifyemail/:email [Verify if an email address format is valid]
 - GET /genpassword [Generates a strong 16 character password]
+- GET /convert/:value/:unit [Convert a computer unit value to other units]
 
 
 ## Installation

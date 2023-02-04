@@ -28,6 +28,56 @@ app.get('/geoipinfo/:ip', (req, res) => {
   });
 });
 
+app.get('/convert/:value/:unit', (req, res) => {
+  const value = req.params.value;
+  const unit = req.params.unit;
+
+  let gigabyteGB, megabyteMB, kilobyteKB, byteB, bits;
+  
+  switch (unit) {
+    case "gigabyte":
+      gigabyteGB = value;
+      megabyteMB = value * 1024;
+      kilobyteKB = value * 1024 * 1024;
+      byteB = value * 1024 * 1024 * 1024;
+      bits = value * 8 * 1024 * 1024 * 1024;
+      break;
+    case "megabyte":
+      gigabyteGB = value / 1024;
+      megabyteMB = value;
+      kilobyteKB = value * 1024;
+      byteB = value * 1024 * 1024;
+      bits = value * 8 * 1024 * 1024;
+      break;
+    case "kilobyte":
+      gigabyteGB = value / 1024 / 1024;
+      megabyteMB = value / 1024;
+      kilobyteKB = value;
+      byteB = value * 1024;
+      bits = value * 8 * 1024;
+      break;
+    case "byte":
+      gigabyteGB = value / 1024 / 1024 / 1024;
+      megabyteMB = value / 1024 / 1024;
+      kilobyteKB = value / 1024;
+      byteB = value;
+      bits = value * 8;
+      break;
+    case "bits":
+      gigabyteGB = value / 8 / 1024 / 1024 / 1024;
+      megabyteMB = value / 8 / 1024 / 1024;
+      kilobyteKB = value / 8 / 1024;
+      byteB = value / 8;
+      bits = value;
+      break;
+    default:
+      res.status(400).send({ error: "Invalid unit of measurement" });
+      return;
+  }
+
+  res.send({ gigabyte: gigabyteGB, megabyte: megabyteMB, kilobyte: kilobyteKB, byte: byteB, bits: bits });
+});
+
 app.get('/genpassword', (req,res) => {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-";
   let password = "";
@@ -96,7 +146,7 @@ app.get('/', (req, res) => {
     res.redirect('/help');
   });
 
-  app.get('/help', (req, res) => {
+app.get('/help', (req, res) => {
     const helpMessage = `
       <h1>Welcome to the ATIB-API Help page!</h1>
       <p>Available routes:</p>
@@ -128,6 +178,10 @@ app.get('/', (req, res) => {
         <li>
           <p><strong>GET /genpassword</strong></p>
           <p>Generates a strong 16 character password</p>
+        </li>
+        <li>
+          <p><strong>GET /convert/:value/:unit</strong></p>
+          <p>Convert a computer unit value to other units</p>
         </li>
       </ul>
     `;
