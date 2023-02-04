@@ -6,8 +6,19 @@ const net = require('net');
 const express = require('express');
 const whois = require('whois-json');
 const geoip = require('geoip-lite');
+const rateLimit = require("express-rate-limit");
 const host = "localhost", port = "3000";
+const RateLimitAPI = rateLimit({
+  windowMs: 2 * 60 * 1000, // 2 minutes
+  max: 45, // limit each IP to 45 requests per windowMs
+  message: { error: "Too many requests, please try again later" },
+  handler: (req, res, next) => {
+    res.status(429).json({ error: "Too many requests, please try again later" });
+  }
+});
 const app = express();
+app.use(RateLimitAPI);
+
 
 app.get('/verifyemail/:email', (req, res) => {
   const email = req.params.email;
