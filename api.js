@@ -181,7 +181,7 @@ app.get('/help', (req, res) => {
         </li>
         <li>
           <p><strong>GET /convert/:value/:unit</strong></p>
-          <p>Convert a computer unit value to other units</p>
+          <p>Convert a computer unit value to other units (:unit -> gigabyte, megabyte, kilobyte, byte, bits)</p>
         </li>
       </ul>
     `;
