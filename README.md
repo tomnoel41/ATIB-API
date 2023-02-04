@@ -1,6 +1,7 @@
 ## ATIB-API
 
 - [x] Help Page
+- [x] Rate Limit
 - [x] Ping Host
 - [x] Resolve DNS Host
 - [x] Check Port Host
