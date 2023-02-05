@@ -10,6 +10,7 @@
 - [x] Check validity e-mail format
 - [x] Generate strong random password
 - [x] Computer unit conversion
+- [x] Display your IPv4
 
 ## Usage Exemple
 
@@ -23,6 +24,7 @@
 - GET /verifyemail/:email [Verify if an email address format is valid]
 - GET /genpassword [Generates a strong 16 character password]
 - GET /convert/:value/:unit [Convert a computer unit value to other units]
+- GET /getip [Display the IPv4 of your client]
 
 
 ## Installation
