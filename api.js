@@ -6,6 +6,7 @@ const net = require('net');
 const express = require('express');
 const whois = require('whois-json');
 const geoip = require('geoip-lite');
+const uuidv4 = require('uuid/v4');
 const rateLimit = require("express-rate-limit");
 const host = "localhost", port = "3000";
 const RateLimitAPI = rateLimit({
@@ -18,6 +19,11 @@ const RateLimitAPI = rateLimit({
 });
 const app = express();
 app.use(RateLimitAPI);
+
+app.get('/generate-uuid', (req, res) => {
+  const newUUID = uuidv4();
+  res.send({ uuid : newUUID });
+});
 
 app.get('/getip', (req, res) => {
   const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -201,6 +207,10 @@ app.get('/help', (req, res) => {
         <li>
           <p><strong>GET /getip</strong></p>
           <p>Display the IPv4 of your client</p>
+        </li>
+        <li>
+          <p><strong>GET /generate-uuid</strong></p>
+          <p>Generates a UUID</p>
         </li>
       </ul>
     `;

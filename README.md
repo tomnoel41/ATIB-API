@@ -11,6 +11,7 @@
 - [x] Generate strong random password
 - [x] Computer unit conversion
 - [x] Display your IPv4
+- [x] UUID Generation
 
 ## Usage Exemple
 
@@ -25,6 +26,7 @@
 - GET /genpassword [Generates a strong 16 character password]
 - GET /convert/:value/:unit [Convert a computer unit value to other units]
 - GET /getip [Display the IPv4 of your client]
+- GET /generate-uuid [Generates a UUID]
 
 
 ## Installation
