@@ -9,7 +9,7 @@ const geoip = require('geoip-lite');
 const uuidv4 = require('uuid/v4');
 const rateLimit = require("express-rate-limit");
 const host = "localhost", port = "3000";
-const RateLimitAPI = rateLimit({
+const rlAPI = rateLimit({
   windowMs: 2 * 60 * 1000, // 2 minutes
   max: 50, // limit each IP to 45 requests per windowMs
   message: { error: "Too many requests, please try again later" },
@@ -18,7 +18,7 @@ const RateLimitAPI = rateLimit({
   }
 });
 const app = express();
-app.use(RateLimitAPI);
+app.use(rlAPI);
 
 app.get('/generate-uuid', (req, res) => {
   const newUUID = uuidv4();
@@ -99,54 +99,53 @@ app.get('/convert/:value/:unit', (req, res) => {
   res.send({ gigabyte: gigabyteGB, megabyte: megabyteMB, kilobyte: kilobyteKB, byte: byteB, bits: bits });
 });
 
-app.get('/genpassword', (req,res) => {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-";
-  let password = "";
-  for (let i = 0; i < 16; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  res.send({password : password});
-});
+  app.get('/genpassword', (req,res) => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-";
+    let password = "";
+    for (let i = 0; i < 16; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    res.send({password : password});
+  });
 
-app.get('/whois/:domain', (req, res) => {
+  app.get('/whois/:domain', (req, res) => {
     const domain = req.params.domain;
 
     whois(domain)
-        .then(function(result) {
-            res.send(result);
-        })
-        .catch(function(error) {
-            res.send({ error: error.toString() });
-        });
-});
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch(function(error) {
+        res.send({ error: error.toString() });
+      });
+  });
 
-app.get('/ping/:host', (req, res) => {
-  const host = req.params.host;
-
-  ping.promise.probe(host)
-    .then(function (response) {
-      res.send({ host: response.host, time: response.time });
-    })
-    .catch(function (error) {
-      res.send({ error: error.toString() });
-    });
-});
-
-
-app.get('/resolvedns/:host', (req, res) => {
+  app.get('/ping/:host', (req, res) => {
     const host = req.params.host;
-  
-    dns.resolve4(host, (err, addresses) => {
-      if (err) {
-        res.send({ error: err.toString() });
-        return;
-      }
-  
-      res.send({ host: host, addresses: addresses });
-    });
-});
 
-app.get('/checkport/:host/:port', (req, res) => {
+    ping.promise.probe(host)
+      .then(function (response) {
+        res.send({ host: response.host, time: response.time });
+      })
+      .catch(function (error) {
+        res.send({ error: error.toString() });
+      });
+  });
+
+
+  app.get('/resolvedns/:host', (req, res) => {
+      const host = req.params.host;
+  
+      dns.resolve4(host, (err, addresses) => {
+        if (err) {
+          res.send({ error: err.toString() });
+          return;
+        }
+        res.send({ host: host, addresses: addresses });
+      });
+  });
+
+  app.get('/checkport/:host/:port', (req, res) => {
     const host = req.params.host;
     const port = req.params.port;
   
@@ -163,11 +162,11 @@ app.get('/checkport/:host/:port', (req, res) => {
     });
   });
 
-app.get('/', (req, res) => {
+  app.get('/', (req, res) => {
     res.redirect('/help');
   });
 
-app.get('/help', (req, res) => {
+  app.get('/help', (req, res) => {
     const helpMessage = `
       <h1>Welcome to the ATIB-API Help page!</h1>
       <p>Available routes:</p>
@@ -216,8 +215,8 @@ app.get('/help', (req, res) => {
     `;
   
     res.send(helpMessage);
-});
+  });
   
-app.listen(port, () => {
-  console.log(`API running on http://${host}:${port}/`);
-});
+  app.listen(port, () => {
+    console.log(`API running on http://${host}:${port}/`);
+  });
