@@ -198,6 +198,10 @@ app.get('/help', (req, res) => {
           <p><strong>GET /convert/:value/:unit</strong></p>
           <p>Convert a computer unit value to other units (:unit -> gigabyte, megabyte, kilobyte, byte, bits)</p>
         </li>
+        <li>
+          <p><strong>GET /getip</strong></p>
+          <p>Display the IPv4 of your client</p>
+        </li>
       </ul>
     `;
   
