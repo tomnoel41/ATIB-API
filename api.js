@@ -216,6 +216,10 @@ app.get('/convert/:value/:unit', (req, res) => {
           <p><strong>GET /generate-uuid</strong></p>
           <p>Generates a UUID</p>
         </li>
+        <li>
+          <p><strong>GET /generate-atibid</strong></p>
+          <p>Generate a ATIB ID</p>
+        </li>
       </ul>
     `;
   
