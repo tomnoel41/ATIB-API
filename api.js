@@ -25,6 +25,11 @@ app.get('/generate-uuid', (req, res) => {
   res.send({ uuid : newUUID });
 });
 
+app.get('/generate-atibid', (req, res) => {
+  const id = `atib-${Math.floor(100000 + Math.random() * 900000)}`
+  res.send({ atibid : id })
+})
+
 app.get('/getip', (req, res) => {
   const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   res.send({ ip : userIP});

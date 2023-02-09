@@ -12,6 +12,7 @@
 - [x] Computer unit conversion
 - [x] Display your IPv4
 - [x] UUID Generation
+- [x] Generate ATIB ID
 
 ## Usage Exemple
 
@@ -27,6 +28,7 @@
 - GET /convert/:value/:unit [Convert a computer unit value to other units]
 - GET /getip [Display the IPv4 of your client]
 - GET /generate-uuid [Generates a UUID]
+- GET /generate-atibid [Generate a ATIB ID]
 
 
 ## Installation
