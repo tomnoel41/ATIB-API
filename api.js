@@ -7,6 +7,7 @@ const express = require('express');
 const whois = require('whois-json');
 const geoip = require('geoip-lite');
 const uuidv4 = require('uuid/v4');
+const os = require('os');
 const rateLimit = require("express-rate-limit");
 const host = "localhost", port = "3000";
 const rlAPI = rateLimit({
@@ -19,6 +20,32 @@ const rlAPI = rateLimit({
 });
 const app = express();
 app.use(rlAPI);
+
+app.get('/specs', (req, res) => {
+  res.json({ hostname: os.hostname(), platform: os.platform(), architecture: os.arch(), cpus: os.cpus(), totalMemory: os.totalmem(), freeMemory: os.freemem(), });
+});
+
+app.get('/uptime', (req, res) => {
+  const uptimeInSeconds = os.uptime();
+  const secondsInDay = 86400;
+  const secondsInWeek = 604800;
+  const secondsInMonth = 2629800;
+  const secondsInYear = 31557600;
+
+  const years = Math.floor(uptimeInSeconds / secondsInYear);
+  const months = Math.floor((uptimeInSeconds % secondsInYear) / secondsInMonth);
+  const weeks = Math.floor(((uptimeInSeconds % secondsInYear) % secondsInMonth) / secondsInWeek);
+  const days = Math.floor((((uptimeInSeconds % secondsInYear) % secondsInMonth) % secondsInWeek) / secondsInDay);
+
+  const uptime = {
+    years,
+    months,
+    weeks,
+    days
+  };
+
+  res.json(uptime);
+});
 
 app.get('/generate-uuid', (req, res) => {
   const newUUID = uuidv4();
@@ -219,6 +246,14 @@ app.get('/convert/:value/:unit', (req, res) => {
         <li>
           <p><strong>GET /generate-atibid</strong></p>
           <p>Generate a ATIB ID</p>
+        </li>
+        <li>
+          <p><strong>GET /uptime</strong></p>
+          <p>Get system uptime</p>
+        </li>
+        <li>
+          <p><strong>GET /specs</strong></p>
+          <p>Get system specifications</p>
         </li>
       </ul>
     `;

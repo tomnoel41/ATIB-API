@@ -25,6 +25,7 @@
     "express-rate-limit": "^6.7.0",
     "geoip-lite": "^1.4.7",
     "net": "^1.0.2",
+    "os": "^0.1.2",
     "ping": "^0.4.2",
     "uuid": "^3.3.2",
     "whois-json": "^2.0.4"

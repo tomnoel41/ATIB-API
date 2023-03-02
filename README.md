@@ -13,6 +13,7 @@
 - [x] Display your IPv4
 - [x] UUID Generation
 - [x] Generate ATIB ID
+- [x] Get System Uptime
 
 ## Usage Exemple
 
@@ -29,6 +30,8 @@
 - GET /getip [Display the IPv4 of your client]
 - GET /generate-uuid [Generates a UUID]
 - GET /generate-atibid [Generate a ATIB ID]
+- GET /uptime [Get system uptime]
+- GET /specs [Get system specifications]
 
 
 ## Installation
