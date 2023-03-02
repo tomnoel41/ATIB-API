@@ -33,6 +33,11 @@
 - GET /uptime [Get system uptime]
 - GET /specs [Get system specifications]
 
+## Rate-Limit
+
+The ATIB-API rate-limit is a 2 minute window in which all requests will be counted, if it exceeds 50 requests, the ip will be blocked for the window, making an endless rate-limit cycle.
+To disable it, pass the "ratelimit_status" variable to false.
+
 
 ## Installation
 

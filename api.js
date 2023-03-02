@@ -10,6 +10,7 @@ const uuidv4 = require('uuid/v4');
 const os = require('os');
 const rateLimit = require("express-rate-limit");
 const host = "localhost", port = "3000";
+var ratelimit_status = true;
 const rlAPI = rateLimit({
   windowMs: 2 * 60 * 1000, // 2 minutes
   max: 50, // limit each IP to 45 requests per windowMs
@@ -19,8 +20,13 @@ const rlAPI = rateLimit({
   }
 });
 const app = express();
-app.use(rlAPI);
-
+if (ratelimit_status) {
+  app.use(rlAPI);
+  console.log("Ratelimit enable")
+} else {
+  app.use();
+  console.log("Ratelimit disable")
+}
 app.get('/specs', (req, res) => {
   res.json({ hostname: os.hostname(), platform: os.platform(), architecture: os.arch(), cpus: os.cpus(), totalMemory: os.totalmem(), freeMemory: os.freemem(), });
 });
