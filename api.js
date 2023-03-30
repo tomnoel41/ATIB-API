@@ -53,6 +53,14 @@ app.get('/uptime', (req, res) => {
   res.json(uptime);
 });
 
+app.get('/consommation/:kwh_price/:watts', (req, res) => {
+  const kwh_price = req.params.kwh_price;
+  const watts = req.params.watts;
+  const mensuel_price = 24 * 30 * watts / 1000 * kwh_price;
+  const annuel_prix = mensuel_price * 12
+  res.send({ mensuel : mensuel_price, annuel : annuel_prix})
+})
+
 app.get('/generate-uuid', (req, res) => {
   const newUUID = uuidv4();
   res.send({ uuid : newUUID });
@@ -260,6 +268,10 @@ app.get('/convert/:value/:unit', (req, res) => {
         <li>
           <p><strong>GET /specs</strong></p>
           <p>Get system specifications</p>
+        </li>
+        <li>
+          <p><strong>GET /consommation/:kwh_price/:watts</strong></p>
+          <p>Calculate the annual and monthly price of a device in Watt</p>
         </li>
       </ul>
     `;

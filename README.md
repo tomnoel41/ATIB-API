@@ -14,6 +14,7 @@
 - [x] UUID Generation
 - [x] Generate ATIB ID
 - [x] Get System Uptime
+- [x] Calculate monthly price of device in watt 
 
 ## Usage Exemple
 
@@ -32,6 +33,7 @@
 - GET /generate-atibid [Generate a ATIB ID]
 - GET /uptime [Get system uptime]
 - GET /specs [Get system specifications]
+- GET /consommation/:kwh_price/:watts [Calculate the annual and monthly price of a device in Watt]
 
 ## Rate-Limit
 
